@@ -82,6 +82,11 @@ export function attachSignalingServer(httpServer: HttpServer, config: SignalingS
             send(socket, { type: 'request_failed', reason: 'device_offline', targetDeviceId: message.targetDeviceId });
             return;
           }
+          const targetDevice = devices.get(message.targetDeviceId);
+          if (!targetDevice || targetDevice.passwordHash !== hashPassword(message.password)) {
+            send(socket, { type: 'request_failed', reason: 'invalid_password', targetDeviceId: message.targetDeviceId });
+            return;
+          }
           if (devices.isBusy(message.targetDeviceId) || devices.isBusy(registeredDeviceId)) {
             send(socket, { type: 'request_failed', reason: 'already_in_session', targetDeviceId: message.targetDeviceId });
             return;

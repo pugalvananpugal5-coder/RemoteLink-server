@@ -31,6 +31,7 @@ export interface RegisterDeviceMessage {
 export interface ConnectRequestMessage {
   type: 'connect_request';
   targetDeviceId: string;
+  password: string;
 }
 
 export interface ApproveRequestMessage {
@@ -109,6 +110,7 @@ export interface RequestSentMessage {
   type: 'request_sent';
   requestId: string;
   targetDeviceId: string;
+
 }
 
 export interface RequestRejectedMessage {
@@ -123,7 +125,7 @@ export interface RequestTimedOutMessage {
 
 export interface RequestFailedMessage {
   type: 'request_failed';
-  reason: 'device_offline' | 'device_not_found' | 'rate_limited' | 'already_in_session';
+  reason: 'device_offline' | 'device_not_found' | 'rate_limited' | 'already_in_session' | 'invalid_password';
   targetDeviceId?: string;
 }
 
