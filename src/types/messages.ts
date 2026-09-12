@@ -25,6 +25,7 @@ export type SessionState =
 export interface RegisterDeviceMessage {
   type: 'register';
   deviceId: string; // client-generated, e.g. "123456789"
+  password: string;
 }
 
 export interface ConnectRequestMessage {

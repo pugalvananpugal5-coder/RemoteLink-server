@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import WebSocket, { WebSocketServer } from 'ws';
 import type { Server as HttpServer } from 'http';
 import { DeviceRegistry } from '../devices/deviceRegistry';
@@ -20,6 +21,7 @@ export interface SignalingServerConfig {
 }
 
 const DEVICE_ID_PATTERN = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+const hashPassword = (password: string) => createHash("sha256").update(password).digest("hex");
 
 export function attachSignalingServer(httpServer: HttpServer, config: SignalingServerConfig): void {
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
@@ -61,7 +63,7 @@ export function attachSignalingServer(httpServer: HttpServer, config: SignalingS
             return;
           }
           registeredDeviceId = message.deviceId;
-          devices.register(message.deviceId, socket);
+          devices.register(message.deviceId, hashPassword(message.password), socket);
           send(socket, { type: 'registered', deviceId: message.deviceId });
           break;
         }

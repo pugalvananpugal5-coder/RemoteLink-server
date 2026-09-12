@@ -15,6 +15,7 @@ import type WebSocket from 'ws';
 
 export interface ConnectedDevice {
   deviceId: string;
+  passwordHash: string;
   socket: WebSocket;
   connectedAt: number;
   /** Set while this device is the target or initiator of an active session, to prevent double-booking. */
@@ -24,7 +25,7 @@ export interface ConnectedDevice {
 export class DeviceRegistry {
   private devicesById = new Map<string, ConnectedDevice>();
 
-  register(deviceId: string, socket: WebSocket): ConnectedDevice {
+  register(deviceId: string, passwordHash: string, socket: WebSocket): ConnectedDevice {
     const existing = this.devicesById.get(deviceId);
     if (existing && existing.socket !== socket && existing.socket.readyState === existing.socket.OPEN) {
       // Same device ID reconnecting from a new socket (e.g. app restart) —
@@ -37,6 +38,7 @@ export class DeviceRegistry {
     }
     const device: ConnectedDevice = {
       deviceId,
+      passwordHash,
       socket,
       connectedAt: Date.now(),
       activeSessionId: null,
