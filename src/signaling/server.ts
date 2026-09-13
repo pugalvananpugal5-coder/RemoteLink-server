@@ -249,7 +249,7 @@ function send(socket: WebSocket, message: ServerMessage): void {
 
 function sendTo(devices: DeviceRegistry, deviceId: string, message: ServerMessage): void {
   const device = devices.get(deviceId);
-  if (device) send(device.socket, message);
+  if (device) { console.log("SEND_TO", deviceId, message.type); send(device.socket, message); } else { console.log("SEND_TO_MISSING", deviceId, message.type); }
 }
 
 function sendUnregisteredError(socket: WebSocket): void {
